@@ -17,6 +17,7 @@ describe("integrate.ts", () => {
 
   const stub2 = mock.stub(_internals, "stderr", () => {})
   const stub3 = mock.stub(_internals, "stdout", x => isString(x))
+  const stub4 = mock.stub(_internals, "isatty", () => false)
 
   beforeEach(() => {
     file = Path.mktemp().join(".bash_profile")
@@ -31,6 +32,7 @@ describe("integrate.ts", () => {
   afterAll(() => {
     stub2.restore()
     stub3.restore()
+    stub4.restore()
   })
 
   it("empty", async function() {
@@ -75,12 +77,7 @@ describe("integrate.ts", () => {
   })
 
   it("isatty", async function() {
-    const stub = mock.stub(_internals, "isatty", () => true)
-    try {
-      file.touch()
-      await specimen("install")
-    } finally {
-      stub.restore()
-    }
+    file.touch()
+    await specimen("install")
   })
 })
